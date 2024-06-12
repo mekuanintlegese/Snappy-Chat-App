@@ -1,19 +1,29 @@
 version: "3.8"
 services:
-  mongo:
+  mongodb:
     image: "mongo:5.0"
     volumes:
       - notes:/data/db
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=meku
-      - MONGO_INITDB_ROOT_PASSWORD=admin
-      # MONGO_INITDB_ROOT_USERNAME: root
-      # MONGO_INITDB_ROOT_PASSWORD: <PASSWORD>
-    # env_file:
-    # - ./env/mongo.env
+    # environment:
+    #   - MONGO_INITDB_ROOT_USERNAME=meku
+    #   - MONGO_INITDB_ROOT_PASSWORD=admin
+    # MONGO_INITDB_ROOT_USERNAME: root
+    # MONGO_INITDB_ROOT_PASSWORD: <PASSWORD>
+    env_file:
+      - ./env/mongo.env
     # networks:
     # - meku-net
-  # backend:
+  backend:
+    build: ./server
+    # build:
+    # context: ./server
+    # dockerfile: Dockerfile-dev
+    # args:
+    # some-arg: 1
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongodb
   # frontend:
 
 volumes:
