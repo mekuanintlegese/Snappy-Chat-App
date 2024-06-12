@@ -2,6 +2,7 @@ version: "3.8"
 services:
   mongodb:
     image: "mongo:5.0"
+    container_name: mongodb
     volumes:
       - notes:/data/db
     # environment:
@@ -13,8 +14,10 @@ services:
       - ./env/mongo.env
     # networks:
     # - meku-net
+
   backend:
     build: ./server
+    container_name: backend
     # build:
     # context: ./server
     # dockerfile: Dockerfile-dev
@@ -24,7 +27,18 @@ services:
       - "5000:5000"
     depends_on:
       - mongodb
-  # frontend:
+
+  frontend:
+    build: ./public
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - "./public/src:/app/src"
+    # stdin_open: true (means -it in Docker commands)
+    # tty: true (means -it in Docker commands)
+    depends_on:
+      - backend
 
 volumes:
   notes:
